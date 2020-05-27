@@ -6,12 +6,15 @@ verify_ssl = true
 [dev-packages]
 nose = "*"
 rope = "*"
+ipython = "*"
 
 [packages]
 requests = "*"
 python-dotenv = "*"
 "discord.py" = "*"
 python-json-logger = "*"
+mcstatus = "*"
+python-ping = "*"
 
 [requires]
 python_version = "3.7"
