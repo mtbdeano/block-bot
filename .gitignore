@@ -1,3 +1,9 @@
+# editor settings are OS local
+.vscode/
+
+# ignore the tokens for source control
+.env
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
