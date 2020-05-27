@@ -21,7 +21,7 @@ class BlockBotClient(discord.Client):
     def __init__(self):
         super().__init__()
         self.log = logging.getLogger(__name__)
-        self.uri = os.getenv("MINECRAFT_URI") or "minecraft.mcrobies.net:25252"
+        self.uri = os.getenv("MINECRAFT_URI")
         self.mc = MinecraftServer.lookup(self.uri)
         self.eyes = discord.utils.get(self.emojis, name='eyes') or '\N{EYES}'
         self.thumbsup = discord.utils.get(self.emojis, name='thumbsup') or '\N{THUMBS UP SIGN}'
