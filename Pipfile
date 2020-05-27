@@ -5,11 +5,13 @@ verify_ssl = true
 
 [dev-packages]
 nose = "*"
+rope = "*"
 
 [packages]
 requests = "*"
 python-dotenv = "*"
 "discord.py" = "*"
+python-json-logger = "*"
 
 [requires]
 python_version = "3.7"
