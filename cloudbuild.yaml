@@ -5,7 +5,7 @@ steps:
            'DISCORD_TOKEN=${DISCORD_TOKEN}',
            '--build-arg',
            'MINECRAFT_URI=${MINECRAFT_URI}',
-           "-t", "gcr.io/$PROJECT_ID/block-bot",
+           "-t", "gcr.io/$PROJECT_ID/block-bot:$COMMIT_SHA",
            "."]
   images:
-  - gcr.io/$PROJECT_ID/block-bot
+  - gcr.io/$PROJECT_ID/block-bot:$COMMIT_SHA
