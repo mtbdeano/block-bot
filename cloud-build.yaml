@@ -2,9 +2,9 @@ steps:
   - name: gcr.io/cloud-builders/docker
     args: ["build",
            '--build-arg',
-           'DISCORD_TOKEN=${DISCORD_TOKEN}',
+           "DISCORD_TOKEN=${DISCORD_TOKEN}",
            '--build-arg',
-           'MINECRAFT_URI=${MINECRAFT_URI}',
+           "MINECRAFT_URI=${MINECRAFT_URI}",
            "-t", "gcr.io/$PROJECT_ID/block-bot:$COMMIT_SHA",
            "."]
   images:
