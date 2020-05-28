@@ -23,6 +23,8 @@ env:
   PROJECT_ID: ${{ secrets.RUN_PROJECT }}
   RUN_REGION: us-central1
   SERVICE_NAME: block-bot
+  DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+  MINECRAFT_URI: ${{ secrets.MINECRAFT_URI }}
 
 jobs:
   setup-build-deploy:
@@ -45,7 +47,9 @@ jobs:
       run: |-
         gcloud builds submit \
           --quiet \
-          --config cloud-build.yaml
+          --substitutions=DISCORD_TOKEN=$DISCORD_TOKEN \
+          --substitutions=MINECRAFT_URI=$MINECRAFT_URI
+          --tag "gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA"
 
     # Deploy image to Cloud Run
     - name: Deploy
