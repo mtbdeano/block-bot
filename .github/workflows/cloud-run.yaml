@@ -49,7 +49,7 @@ jobs:
 
     # Deploy image to Cloud Run
     - name: Deploy
-      if: ${github.ref} == 'master'
+      if: ${{ github.ref == 'master' }}
       run: |-
         gcloud run deploy "$SERVICE_NAME" \
           --quiet \
