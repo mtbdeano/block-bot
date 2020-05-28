@@ -16,4 +16,4 @@ ENV MINECRAFT_URI=${MINECRAFT_URI}
 
 RUN echo Looking for ${MINECRAFT_URI}
 
-CMD ["python", "minecraftbot.py"]
+CMD ["python", "/app/minecraftbot.py"]
