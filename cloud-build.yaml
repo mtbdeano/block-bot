@@ -1,6 +1,6 @@
 steps:
   - name: 'bash'
-    args: [ "echo", "$MINECRAFT_URI"]
+    args: [ "-c", "echo", "$$MINECRAFT_URI"]
     env:
       - MINECRAFT_URI=${MINECRAFT_URI}
   # - name: gcr.io/cloud-builders/docker
