@@ -23,14 +23,19 @@ class BlockBotClient(discord.Client):
         self.log = logging.getLogger(__name__)
         self.uri = os.getenv("MINECRAFT_URI")
         self.mc = MinecraftServer.lookup(self.uri)
-        self.eyes = discord.utils.get(self.emojis, name='eyes') or '\N{EYES}'
-        self.thumbsup = discord.utils.get(self.emojis, name='thumbsup') or '\N{THUMBS UP SIGN}'
-        self.thumbsdown = discord.utils.get(self.emojis, name='thumbsdown') or '\N{THUMBS DOWN SIGN}'
+        self.eyes = None
+
+    def lazy_init(self):
+        if self.eyes is None:
+            self.eyes = discord.utils.get(self.emojis, name='eyes') or '\N{EYES}'
+            self.thumbsup = discord.utils.get(self.emojis, name='thumbsup') or '\N{THUMBS UP SIGN}'
+            self.thumbsdown = discord.utils.get(self.emojis, name='thumbsdown') or '\N{THUMBS DOWN SIGN}'
 
     async def on_ready(self):
         self.log.info('Logged on as {0}!'.format(self.user))
 
     async def on_message(self, message):
+        self.lazy_init()
         self.log.debug('Message from {0.author}: {0.clean_content}'.format(message))
         for mention in message.mentions:
             if mention == self.user:
@@ -68,4 +73,5 @@ if __name__ == "__main__":
     client = BlockBotClient()
 
     TOKEN = os.getenv('DISCORD_TOKEN')
+    logging.getLogger(__name__).info("uri {}, token {}".format(os.getenv("MINECRAFT_URI"), TOKEN[:8]))
     client.run(TOKEN)
