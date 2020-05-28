@@ -47,8 +47,7 @@ jobs:
       run: |-
         gcloud builds submit \
           --quiet \
-          --substitutions=DISCORD_TOKEN=$DISCORD_TOKEN \
-          --substitutions=MINECRAFT_URI=$MINECRAFT_URI
+          --substitutions=DISCORD_TOKEN=$DISCORD_TOKEN,MINECRAFT_URI=$MINECRAFT_URI \
           --tag "gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA"
 
     # Deploy image to Cloud Run
