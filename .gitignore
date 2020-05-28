@@ -1,8 +1,9 @@
 # editor settings are OS local
 .vscode/
 
-# ignore the tokens for source control
+# ignore the tokens for source control and secrets
 .env
+deans-cloud-tools*.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
