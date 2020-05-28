@@ -5,8 +5,8 @@ steps:
       "-t",
       "gcr.io/$PROJECT_ID/$REPO_NAME:$SHORT_SHA",
       ".",
-      "--build-args", "DISCORD_TOKEN=${_DISCORD_TOKEN}",
-      "--build-args", "MINECRAFT_URI=${_MINECRAFT_URI}"
+      "--build-arg", "DISCORD_TOKEN=${_DISCORD_TOKEN}",
+      "--build-arg", "MINECRAFT_URI=${_MINECRAFT_URI}"
     ]
 images:
   - 'gcr.io/$PROJECT_ID/$REPO_NAME:$SHORT_SHA'
