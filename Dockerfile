@@ -14,4 +14,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 ENV DISCORD_TOKEN=${DISCORD_TOKEN}
 ENV MINECRAFT_URI=${MINECRAFT_URI}
 
+RUN echo Looking for ${MINECRAFT_URI}
+
 CMD ["python", "minecraftbot.py"]
