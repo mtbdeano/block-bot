@@ -22,7 +22,7 @@ on:
 env:
   PROJECT_ID: ${{ secrets.RUN_PROJECT }}
   RUN_REGION: us-central1
-  SERVICE_NAME: block-bot-svc
+  SERVICE_NAME: block-bot
 
 jobs:
   setup-build-deploy:
