@@ -3,15 +3,16 @@ steps:
     args: [ "echo", "$MINECRAFT_URI"]
     env:
       - MINECRAFT_URI=${MINECRAFT_URI}
-  - name: gcr.io/cloud-builders/docker
-    args: [ "build", \
-            "--build-arg", "DISCORD_TOKEN=${DISCORD_TOKEN}", \
-            "--build-arg", "MINECRAFT_URI=${MINECRAFT_URI}", \
-            "-t", "gcr.io/$PROJECT_ID/block-bot:$COMMIT_SHA", \
-            "." \
-            ]
-    env:
-    - DISCORD_TOKEN=${DISCORD_TOKEN}
-    - MINECRAFT_URI=${MINECRAFT_URI}
+  # - name: gcr.io/cloud-builders/docker
+  #   entrypoint: bash
+  #   args: [ "docker", "build", \
+  #           "--build-arg", "DISCORD_TOKEN=${DISCORD_TOKEN}", \
+  #           "--build-arg", "MINECRAFT_URI=${MINECRAFT_URI}", \
+  #           "-t", "gcr.io/$PROJECT_ID/block-bot:$COMMIT_SHA", \
+  #           "." \
+  #           ]
+  #   env:
+  #   - DISCORD_TOKEN=${DISCORD_TOKEN}
+  #   - MINECRAFT_URI=${MINECRAFT_URI}
 images:
   - gcr.io/$PROJECT_ID/block-bot:$COMMIT_SHA
