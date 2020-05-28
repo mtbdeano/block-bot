@@ -1,4 +1,8 @@
 steps:
+  - name: 'bash'
+    args: [ "echo", "$MINECRAFT_URI"]
+    env:
+      - DISCORD_TOKEN=${MINECRAFT_URI}
   - name: gcr.io/cloud-builders/docker
     args: [ "build", \
             "--build-arg", "DISCORD_TOKEN=${DISCORD_TOKEN}", \
