@@ -6,5 +6,8 @@ steps:
             "-t", "gcr.io/$PROJECT_ID/block-bot:$COMMIT_SHA", \
             "." \
             ]
+    env:
+    - DISCORD_TOKEN
+    - MINECRAFT_URI
 images:
   - gcr.io/$PROJECT_ID/block-bot:$COMMIT_SHA
