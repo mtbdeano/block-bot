@@ -1,12 +1,33 @@
 steps:
   - name: "gcr.io/cloud-builders/docker"
-    args: [
-      "build",
-      "-t",
-      "gcr.io/$PROJECT_ID/$REPO_NAME:$SHORT_SHA",
-      ".",
-      "--build-arg", "DISCORD_TOKEN=${_DISCORD_TOKEN}",
-      "--build-arg", "MINECRAFT_URI=${_MINECRAFT_URI}"
-    ]
+    args:
+    - "build"
+    - "-t"
+    - "gcr.io/$PROJECT_ID/$REPO_NAME:$SHORT_SHA"
+    - "."
+    - "--build-arg"
+    - "DISCORD_TOKEN=${_DISCORD_TOKEN}"
+    - "--build-arg"
+    - "MINECRAFT_URI=${_MINECRAFT_URI}"
+  - name: "gcr.io/cloud-builders/gcloud"
+    args:
+    - "beta"
+    - "compute"
+    - "instances"
+    - "update-container"
+    - "block-bot"
+    - "gcr.io/$PROJECT_ID/$REPO_NAME:$SHORT_SHA"
+  - name: "gcr.io/cloud-builders/gcloud"
+    args:
+    - "compute"
+    - "instances"
+    - "stop"
+    - "block-bot"
+  - name: "gcr.io/cloud-builders/gcloud"
+    args:
+    - "compute"
+    - "instances"
+    - "start"
+    - "block-bot"
 images:
   - 'gcr.io/$PROJECT_ID/$REPO_NAME:$SHORT_SHA'
