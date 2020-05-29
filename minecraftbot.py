@@ -74,4 +74,5 @@ if __name__ == "__main__":
 
     TOKEN = os.getenv('DISCORD_TOKEN')
     logging.getLogger(__name__).info("uri {}, token {}".format(os.getenv("MINECRAFT_URI"), TOKEN[:8]))
-    client.run(TOKEN)
+    if TOKEN is not None and len(TOKEN) > 0:
+        client.run(TOKEN)
