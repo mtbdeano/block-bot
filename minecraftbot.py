@@ -28,7 +28,7 @@ class BlockBotClient(discord.Client):
     def lazy_init(self):
         if self.eyes is None:
             self.eyes = discord.utils.get(self.emojis, name='eyes') or '\N{EYES}'
-            self.robot = discord.utils.get(self.emojis, name='robot') or '\N{ROBOT}'
+            self.robot = discord.utils.get(self.emojis, name='robot') or "\U0001F916"  # robot!
             self.thumbsup = discord.utils.get(self.emojis, name='thumbsup') or '\N{THUMBS UP SIGN}'
             self.thumbsdown = discord.utils.get(self.emojis, name='thumbsdown') or '\N{THUMBS DOWN SIGN}'
 
@@ -47,7 +47,7 @@ class BlockBotClient(discord.Client):
                 await message.add_reaction(self.eyes)
                 self.log.debug("identifying")
                 status = self.mc.status()
-                smsg = "Sigh, yes, I am a robot, or am I @mtbdeano in disguise?")
+                smsg = "The server at `{2}` is up and has {0} players and replied in {1} ms".format(status.players.online, status.latency, self.uri)
                 self.log.info(smsg)
                 await message.add_reaction(self.robot)
                 await message.channel.send(smsg)
@@ -55,19 +55,22 @@ class BlockBotClient(discord.Client):
             self.log.error(err)
             await message.add_reaction(self.thumbsdown)
 
-    async def identifu(self, message):
-        # 'status' is supported by all Minecraft servers that are version 1.7 or higher.
-        try:
-            async with message.channel.typing():
-                await message.add_reaction(self.eyes)
-                smsg = "The server at `{2}` is up and has {0} players and replied in {1} ms".format(status.players.online, status.latency, self.uri)
-                self.log.info(smsg)
-                await message.add_reaction(self.thumbsup)
-                await message.channel.send(smsg)
-        except Exception as err:
-            self.log.error(err)
-            await message.add_reaction(self.thumbsdown)
-            await message.channel.send("nope, doesn't look like the server at `{}` is up! {}".format(self.uri, err))
+    async def identify(self, message):
+        if message.author != self.user:
+            # 'status' is supported by all Minecraft servers that are version 1.7 or higher.
+            try:
+                async with message.channel.typing():
+                    await message.add_reaction(self.eyes)
+                    mtbdeano = discord.utils.find(lambda m: m.name == 'mtbdeano', message.channel.guild.members)
+                    smsg = "<@{}>, sigh, yes, I am a robot ... or am I <@{}> in disguise?".format(message.author.id, mtbdeano.id)
+
+                    self.log.info(smsg)
+                    await message.add_reaction(self.robot)
+                    await message.channel.send(smsg)
+            except Exception as err:
+                self.log.error(err)
+                await message.add_reaction(self.thumbsdown)
+                await message.channel.send("nope, doesn't look like there is a robot {}".format(err))
 
     async def process(self, message):
         if '?' in message.clean_content and 'server' in message.clean_content.lower():
