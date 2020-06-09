@@ -48,11 +48,17 @@ jobs:
       # Build the Docker image
       - name: Container build
         run: |-
-          docker build --tag "gcr.io/$PROJECT_ID/$PROJECT_NAME:$GITHUB_SHA" \
+          docker build --tag "gcr.io/$PROJECT_ID/$PROJECT_NAME:$GITHUB_SHA"
+          --tag "localbuild/testimage:latest" \
           --build-arg DISCORD_TOKEN={DISCORD_TOKEN} \
           --build-arg MINECRAFT_URI=${MINECRAFT_URI} \
           .
       # Push the Docker image to Google Container Registry
+      - name: Anchore Container Scan
+        uses: anchore/scan-action@1.0.6
+        with:
+          image-reference: "localbuild/testimage:latest"
+          # fail-build: true
       - name: Publish to GCR
         run: |-
           docker push "gcr.io/$PROJECT_ID/$PROJECT_NAME:$GITHUB_SHA"
