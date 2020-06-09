@@ -31,6 +31,8 @@ jobs:
       - name: Test with pytest
         run: |
           pytest
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@v1.3
       - name: Setup gcloud
         uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
         with:
