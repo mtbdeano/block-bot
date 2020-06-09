@@ -1,8 +1,9 @@
-name: Build branch and push image to GCR
+name: Build and push image to GCR, deploy if on master
 on: [push]
 
 env:
   PROJECT_ID: ${{ secrets.RUN_PROJECT }}
+  PROJECT_NAME: block-bot
   GCE_INSTANCE: ${{ secrets.INSTANCE_NAME }}
   GCE_INSTANCE_ZONE: ${{ secrets.INSTANCE_ZONE }}
   MINECRAFT_URI: ${{ secrets.MINECRAFT_URI }}
@@ -46,17 +47,17 @@ jobs:
       # Build the Docker image
       - name: Container build
         run: |-
-          docker build --tag "gcr.io/$PROJECT_ID/$GCE_INSTANCE-image:$GITHUB_SHA" \
+          docker build --tag "gcr.io/$PROJECT_ID/$PROJECT_NAME:$GITHUB_SHA" \
           --build-arg DISCORD_TOKEN={DISCORD_TOKEN} \
           --build-arg MINECRAFT_URI=${MINECRAFT_URI} \
           .
       # Push the Docker image to Google Container Registry
-      - name: Publish
+      - name: Publish to GCR
         run: |-
-          docker push "gcr.io/$PROJECT_ID/$GCE_INSTANCE-image:$GITHUB_SHA"
-      - name: Deploy (master)
+          docker push "gcr.io/$PROJECT_ID/$PROJECT_NAME:$GITHUB_SHA"
+      - name: Deploy (master) to GCE instance "$GCE_INSTANCE"
         if: ${{ github.ref == 'master' }}
         run: |-
           gcloud compute instances update-container "$GCE_INSTANCE" \
             --zone "$GCE_INSTANCE_ZONE" \
-            --container-image "gcr.io/$PROJECT_ID/$GCE_INSTANCE-image:$GITHUB_SHA"
+            --container-image "gcr.io/$PROJECT_ID/$PROJECT_NAME:$GITHUB_SHA"
