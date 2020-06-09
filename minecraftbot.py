@@ -47,7 +47,8 @@ class BlockBotClient(discord.Client):
                 await message.add_reaction(self.eyes)
                 self.log.debug("identifying")
                 status = self.mc.status()
-                smsg = "The server at `{2}` is up and has {0} players and replied in {1} ms".format(status.players.online, status.latency, self.uri)
+                smsg = "The server at `{2}` is up and has {0} players and replied in {1} ms".format(
+                        status.players.online, status.latency, self.uri)
                 self.log.info(smsg)
                 await message.add_reaction(self.robot)
                 await message.channel.send(smsg)
@@ -62,8 +63,8 @@ class BlockBotClient(discord.Client):
                 async with message.channel.typing():
                     await message.add_reaction(self.eyes)
                     mtbdeano = discord.utils.find(lambda m: m.name == 'mtbdeano', message.channel.guild.members)
-                    smsg = "<@{}>, sigh, yes, I am a robot ... or am I <@{}> in disguise?".format(message.author.id, mtbdeano.id)
-
+                    smsg = "<@{}>, sigh, yes, I am a robot ... or am I <@{}> in disguise?".format(
+                        message.author.id, mtbdeano.id)
                     self.log.info(smsg)
                     await message.add_reaction(self.robot)
                     await message.channel.send(smsg)
@@ -79,7 +80,6 @@ class BlockBotClient(discord.Client):
             await self.status(message)
         if 'robot' in message.clean_content.lower():
             await self.identify(message)
-
 
 
 if __name__ == "__main__":
