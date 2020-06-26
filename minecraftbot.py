@@ -36,10 +36,6 @@ class BlockBotClient(discord.Client):
                 }]
         for s in self.servers:
             self.log.info(f'I will check {s["name"]} == {s["server"]}:{s["port"]}')
-        self.eyes = discord.utils.get(self.emojis, name='eyes') or '\N{EYES}'
-        self.thumbsup = discord.utils.get(self.emojis, name='thumbsup') or '\N{THUMBS UP SIGN}'
-        self.thumbsdown = discord.utils.get(self.emojis, name='thumbsdown') or '\N{THUMBS DOWN SIGN}'
-        self.mc = MinecraftServer.lookup(self.uri)
         self.eyes = None
 
     def lazy_init(self):
@@ -71,6 +67,10 @@ class BlockBotClient(discord.Client):
                     smsg = f'The server {server["name"]} is up and has {status.players.online} players and replied in {status.latency} ms'
                     self.log.info(smsg)
                     await message.add_reaction(self.thumbsup)
+            except Exception as err:
+                self.log.error(err)
+                await message.add_reaction(self.thumbsdown)
+                await message.channel.send(f'nope, doesn\'t look like the {server["name"]} is up! {err}')
 
     async def identify(self, message):
         if message.author != self.user:
@@ -87,8 +87,7 @@ class BlockBotClient(discord.Client):
             except Exception as err:
                 self.log.error(err)
                 await message.add_reaction(self.thumbsdown)
-                await message.channel.send(f'nope, doesn\'t look like the {server["name"]} is up! {err}')
-
+                await message.channel.send(f'weird i can\'t identify myself! {err}')
 
     async def process(self, message):
         if '?' in message.clean_content and 'server' in message.clean_content.lower():
@@ -98,7 +97,7 @@ class BlockBotClient(discord.Client):
         if 'robot' in message.clean_content.lower():
             await self.identify(message)
 
-                                           
+
 if __name__ == "__main__":
     setup_logging(logging.INFO)
     load_dotenv()
@@ -106,6 +105,5 @@ if __name__ == "__main__":
     client = BlockBotClient()
 
     TOKEN = os.getenv('DISCORD_TOKEN')
-    logging.getLogger(__name__).info("uri {}, token {}".format(os.getenv("MINECRAFT_URI"), TOKEN[:8]))
     if TOKEN is not None and len(TOKEN) > 0:
         client.run(TOKEN)
