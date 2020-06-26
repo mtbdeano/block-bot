@@ -1,5 +1,6 @@
 # editor settings are OS local
 .vscode/
+servers.json
 
 # ignore the tokens for source control and secrets
 .env
