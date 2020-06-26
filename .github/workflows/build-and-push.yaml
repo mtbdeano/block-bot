@@ -10,28 +10,28 @@ env:
   DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
 jobs:
   build-and-push:
-    name: Build and push
+    name: build, test, and push
     runs-on: ubuntu-latest
     steps:
-      - name: Check out the repo
+      - name: check out the repo
         uses: actions/checkout@v2
-      - name: Set up Python 3.7
+      - name: set up Python 3.7
         uses: actions/setup-python@v2
         with:
           python-version: 3.7
-      - name: Install dependencies
+      - name: install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install pylama pytest
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-      - name: Lint with pylama
+      - name: lint with pylama
         run: |
           # stop the build if there are Python syntax errors or undefined names
           pylama -o pylama.ini
-      - name: Test with pytest
+      - name: test with pytest
         run: |
           pytest
-      - name: Setup gcloud
+      - name: setup gcloud
         uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
         with:
           version: '290.0.1'
@@ -39,18 +39,18 @@ jobs:
           project_id: ${{ secrets.RUN_PROJECT }}
       # Configure Docker to use the gcloud command-line tool as a credential
       # helper for authentication
-      - name: Authorize with GCR
+      - name: authorize with GCR
         run: |-
           gcloud --quiet auth configure-docker
       # Build the Docker image
-      - name: Container build
+      - name: container build
         run: |-
           docker build --tag "gcr.io/$PROJECT_ID/$PROJECT_NAME:$GITHUB_SHA" \
           --build-arg DISCORD_TOKEN=${DISCORD_TOKEN} \
           --build-arg MINECRAFT_URI='${MINECRAFT_URI}' \
           .
       # Push the Docker image to Google Container Registry
-      - name: Publish to GCR
+      - name: publish to GCR
         run: |-
           docker push "gcr.io/$PROJECT_ID/$PROJECT_NAME:$GITHUB_SHA"
   deploy:
@@ -59,23 +59,13 @@ jobs:
     needs: build-and-push
     if: ${{ github.ref == 'refs/heads/master' }}
     steps:
-      - name: Extract branch name
-        shell: bash
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-        id: extract_branch
-      - name: Setup gcloud
+      - name: setup gcloud
         uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
         with:
           version: '290.0.1'
           service_account_key: ${{ secrets.RUN_SA_KEY }}
           project_id: ${{ secrets.RUN_PROJECT }}
-      # Configure Docker to use the gcloud command-line tool as a credential
-      # helper for authentication
-      - name: Authorize with GCR
-        run: |-
-          gcloud --quiet auth configure-docker
-      - name: Deploy (master) to GCE
-        if: ${{ github.ref == 'master' }}
+      - name: deploy to GCE
         run: |-
           gcloud compute instances update-container "$GCE_INSTANCE" \
             --zone "$GCE_INSTANCE_ZONE" \
