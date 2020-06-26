@@ -23,6 +23,7 @@ class BlockBotClient(discord.Client):
         super().__init__()
         self.log = logging.getLogger(__name__)
         self.uri = os.getenv("MINECRAFT_URI")
+        self.log.info(f'looking for MINECRAFT_URI={self.uri}')
         first_char = self.uri.strip()[0]
         if first_char == '{' or first_char == '[':  # it's a json blob
             self.servers = json.loads(self.uri)
