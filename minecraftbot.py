@@ -64,7 +64,8 @@ class BlockBotClient(discord.Client):
                     await message.add_reaction(self.eyes)
                     self.log.debug(f'pinging {server["server"]}:{server["port"]}')
                     status = MinecraftServer.lookup(f'{server["server"]}:{server["port"]}')
-                    smsg = f'The server {server["name"]} is up and has {status.players.online} players and replied in {status.latency} ms'
+                    smsg = f'The server {server["name"]} is up and has '
+                        f'{status.players.online} players and replied in {status.latency} ms'
                     self.log.info(smsg)
                     await message.add_reaction(self.thumbsup)
             except Exception as err:
