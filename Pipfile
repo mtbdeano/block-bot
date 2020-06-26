@@ -4,9 +4,9 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-nose = "*"
 rope = "*"
-ipython = "*"
+pytest = "*"
+pylama = "*"
 
 [packages]
 python-dotenv = "*"
