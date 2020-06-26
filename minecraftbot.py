@@ -1,6 +1,7 @@
 import os
 import discord
 import logging
+import json
 from dotenv import load_dotenv
 from pythonjsonlogger import jsonlogger
 from mcstatus import MinecraftServer
@@ -22,6 +23,19 @@ class BlockBotClient(discord.Client):
         super().__init__()
         self.log = logging.getLogger(__name__)
         self.uri = os.getenv("MINECRAFT_URI")
+        first_char = self.uri.strip()[0]
+        if first_char == '{' or first_char == '[':  # it's a json blob
+            self.servers = json.loads(self.uri)
+            if not isinstance(self.servers, list):
+                self.servers = list(self.servers)  # force a list of one item
+        else:
+            self.servers = [{
+                "server": self.uri.split(':')[0],
+                "port": int(self.uri.split(':')[1]),
+                "name": "Original Gansta"
+                }]
+        for s in self.servers:
+            self.log.info("I will check %s == %s : %d", s['name'], s['server'], s['port'])
         self.mc = MinecraftServer.lookup(self.uri)
         self.eyes = discord.utils.get(self.emojis, name='eyes') or '\N{EYES}'
         self.thumbsup = discord.utils.get(self.emojis, name='thumbsup') or '\N{THUMBS UP SIGN}'
