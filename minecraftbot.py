@@ -35,8 +35,7 @@ class BlockBotClient(discord.Client):
                 "name": "Original Gansta"
                 }]
         for s in self.servers:
-            self.log.info("I will check %s == %s : %d", s['name'], s['server'], s['port'])
-        self.mc = MinecraftServer.lookup(self.uri)
+            self.log.info(f'I will check {s["name"]} == {s["server"]}:{s["port"]}')
         self.eyes = discord.utils.get(self.emojis, name='eyes') or '\N{EYES}'
         self.thumbsup = discord.utils.get(self.emojis, name='thumbsup') or '\N{THUMBS UP SIGN}'
         self.thumbsdown = discord.utils.get(self.emojis, name='thumbsdown') or '\N{THUMBS DOWN SIGN}'
@@ -45,7 +44,7 @@ class BlockBotClient(discord.Client):
         self.log.info('Logged on as {0}!'.format(self.user))
 
     async def on_message(self, message):
-        self.log.debug('Message from {0.author}: {0.clean_content}'.format(message))
+        self.log.debug(f'Message from {message.author}: {message.clean_content}')
         for mention in message.mentions:
             if mention == self.user:
                 self.log.debug("its for us!")
@@ -53,26 +52,26 @@ class BlockBotClient(discord.Client):
 
     async def status(self, message):
         # 'status' is supported by all Minecraft servers that are version 1.7 or higher.
-        try:
-            async with message.channel.typing():
-                await message.add_reaction(self.eyes)
-                self.log.debug("pinging")
-                status = self.mc.status()
-                smsg = "The server at {2} is up and has {0} players and replied in {1} ms".format(status.players.online, status.latency, self.uri)
-                self.log.info(smsg)
-                await message.add_reaction(self.thumbsup)
-                await message.channel.send(smsg)
-        except Exception as err:
-            self.log.error(err)
-            await message.add_reaction(self.thumbsdown)
-            await message.channel.send("nope, doesn't look like the server at {} is up! {}".format(self.uri, err))
+        for server in self.servers:
+            try:
+                async with message.channel.typing():
+                    await message.add_reaction(self.eyes)
+                    self.log.debug(f'pinging {server["server"]}:{server["port"]}')
+                    status = MinecraftServer.lookup(f'{server["server"]}:{server["port"]}')
+                    smsg = f'The server {server["name"]} is up and has {status.players.online} players and replied in {status.latency} ms'
+                    self.log.info(smsg)
+                    await message.add_reaction(self.thumbsup)
+                    await message.channel.send(smsg)
+            except Exception as err:
+                self.log.error(err)
+                await message.add_reaction(self.thumbsdown)
+                await message.channel.send(f'nope, doesn\'t look like the {server["name"]} is up! {err}')
 
     async def process(self, message):
         if '?' in message.content:
             # assume we are asking about the server, check connectivity
             self.log.debug("found a status question")
             await self.status(message)
-
 
 
 if __name__ == "__main__":
