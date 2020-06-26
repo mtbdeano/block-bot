@@ -7,6 +7,8 @@ verify_ssl = true
 nose = "*"
 rope = "*"
 ipython = "*"
+pytest = "*"
+pylama = "*"
 
 [packages]
 python-dotenv = "*"
