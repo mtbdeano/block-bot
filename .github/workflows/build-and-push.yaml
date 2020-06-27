@@ -45,6 +45,8 @@ jobs:
       # Build the Docker image
       - name: container build
         run: |-
+          echo "baking in MINECRAFT_URI"
+          echo ${MINECRAFT_URI}
           docker build --tag "gcr.io/$PROJECT_ID/$PROJECT_NAME:$GITHUB_SHA" \
           --build-arg DISCORD_TOKEN=${DISCORD_TOKEN} \
           --build-arg MINECRAFT_URI='${MINECRAFT_URI}' \
